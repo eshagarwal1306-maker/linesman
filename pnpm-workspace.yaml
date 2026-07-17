@@ -1,0 +1,12 @@
+allowBuilds:
+  '@stellar/stellar-sdk': false
+  bigint-buffer: false
+  blake-hash: false
+  bufferutil: false
+  esbuild: true
+  protobufjs: true
+  sharp: true
+  tiny-secp256k1: false
+  unrs-resolver: true
+  usb: false
+  utf-8-validate: false

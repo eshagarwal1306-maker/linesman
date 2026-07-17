@@ -1,1 +1,11 @@
 .worktrees/
+.next/
+node_modules/
+out/
+build/
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
+.env*
+!.env.example
