@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { requireSession } from "@/lib/auth/session";
+import {
+  assertSameOrigin,
+  enforceRateLimit,
+  requireSession,
+} from "@/lib/auth/session";
 import { getNetworkConfig } from "@/lib/network/config";
 import {
   getCredential,
@@ -15,10 +19,12 @@ const requestSchema = z.object({
 
 export async function POST(request: Request) {
   try {
+    assertSameOrigin(request);
     const session = await requireSession();
     const { network, walletSignature } = requestSchema.parse(
       await request.json(),
     );
+    enforceRateLimit(`setup:${session.userId}:${network}`, 8);
     const credential = await getCredential(session.userId, network);
     if (
       !credential ||

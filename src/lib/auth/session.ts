@@ -12,12 +12,42 @@ import { buildLoginMessage } from "./message";
 
 const NONCE_TTL_MS = 5 * 60 * 1_000;
 const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1_000;
+const rateLimits = new Map<string, { count: number; resetsAt: number }>();
 
 export const SESSION_COOKIE_NAME =
   process.env.SESSION_COOKIE_NAME ?? "txline_session";
 
 function hash(value: string): string {
   return createHash("sha256").update(value).digest("hex");
+}
+
+export function assertSameOrigin(request: Request): void {
+  const origin = request.headers.get("origin");
+  if (!origin) return;
+  const expected = new URL(
+    process.env.NEXT_PUBLIC_APP_URL ?? request.url,
+  ).origin;
+  if (origin !== expected) throw new Error("Cross-origin request rejected");
+}
+
+export function enforceRateLimit(
+  key: string,
+  limit = 10,
+  windowMs = 60_000,
+): void {
+  const now = Date.now();
+  if (rateLimits.size > 5_000) {
+    for (const [candidate, entry] of rateLimits) {
+      if (entry.resetsAt <= now) rateLimits.delete(candidate);
+    }
+  }
+  const current = rateLimits.get(key);
+  if (!current || current.resetsAt <= now) {
+    rateLimits.set(key, { count: 1, resetsAt: now + windowMs });
+    return;
+  }
+  if (current.count >= limit) throw new Error("Too many requests");
+  current.count += 1;
 }
 
 export type SessionIdentity = {

@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import {
+  assertSameOrigin,
+  enforceRateLimit,
   SESSION_COOKIE_NAME,
   sessionCookieOptions,
   verifyLoginAndCreateSession,
@@ -19,6 +21,8 @@ export async function POST(request: Request) {
   let input: z.infer<typeof requestSchema>;
   try {
     input = requestSchema.parse(await request.json());
+    assertSameOrigin(request);
+    enforceRateLimit(`auth:${input.walletPublicKey}`, 8);
   } catch {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }

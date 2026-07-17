@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { createLoginChallenge } from "@/lib/auth/session";
+import {
+  assertSameOrigin,
+  createLoginChallenge,
+  enforceRateLimit,
+} from "@/lib/auth/session";
 
 const requestSchema = z.object({
   walletPublicKey: z.string().min(32).max(64),
@@ -10,6 +14,8 @@ const requestSchema = z.object({
 export async function POST(request: Request) {
   try {
     const { walletPublicKey } = requestSchema.parse(await request.json());
+    assertSameOrigin(request);
+    enforceRateLimit(`auth:${walletPublicKey}`, 8);
     const domain = new URL(
       process.env.NEXT_PUBLIC_APP_URL ?? request.url,
     ).host;

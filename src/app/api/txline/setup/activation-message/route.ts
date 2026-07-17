@@ -2,7 +2,11 @@ import { Connection, PublicKey } from "@solana/web3.js";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { requireSession } from "@/lib/auth/session";
+import {
+  assertSameOrigin,
+  enforceRateLimit,
+  requireSession,
+} from "@/lib/auth/session";
 import { getNetworkConfig } from "@/lib/network/config";
 import { buildActivationMessage } from "@/lib/txline/activation";
 import {
@@ -18,8 +22,10 @@ const requestSchema = z.object({
 
 export async function POST(request: Request) {
   try {
+    assertSameOrigin(request);
     const session = await requireSession();
     const input = requestSchema.parse(await request.json());
+    enforceRateLimit(`setup:${session.userId}:${input.network}`, 8);
     const config = getNetworkConfig(input.network);
     if (!config.serviceLevels.includes(input.serviceLevelId)) {
       throw new Error("Unsupported service level");
