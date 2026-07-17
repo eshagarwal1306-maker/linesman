@@ -1,5 +1,5 @@
 {
-  "id": "4961516f-bfb7-46d1-945a-2c193a768413",
+  "id": "a304cd9b-589f-4621-878a-659d0cee2ee9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -219,7 +219,16 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
-      "checkConstraints": {},
+      "checkConstraints": {
+        "txline_credentials_duration_weeks_check": {
+          "name": "txline_credentials_duration_weeks_check",
+          "value": "(\"txline_credentials\".\"setup_state\" = 'guest_created' AND \"txline_credentials\".\"duration_weeks\" IS NULL)\n        OR (\"txline_credentials\".\"setup_state\" IN ('subscribed', 'activated') AND \"txline_credentials\".\"duration_weeks\" = 4)"
+        },
+        "txline_credentials_service_level_check": {
+          "name": "txline_credentials_service_level_check",
+          "value": "(\"txline_credentials\".\"setup_state\" = 'guest_created' AND \"txline_credentials\".\"service_level_id\" IS NULL)\n        OR (\"txline_credentials\".\"setup_state\" IN ('subscribed', 'activated')\n          AND \"txline_credentials\".\"network\" = 'devnet'\n          AND \"txline_credentials\".\"service_level_id\" IS NOT NULL\n          AND \"txline_credentials\".\"service_level_id\" = 1)\n        OR (\"txline_credentials\".\"setup_state\" IN ('subscribed', 'activated')\n          AND \"txline_credentials\".\"network\" = 'mainnet'\n          AND \"txline_credentials\".\"service_level_id\" IS NOT NULL\n          AND \"txline_credentials\".\"service_level_id\" IN (1, 12))"
+        }
+      },
       "isRLSEnabled": false
     },
     "public.users": {

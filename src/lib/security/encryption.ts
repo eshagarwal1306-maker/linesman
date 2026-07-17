@@ -1,3 +1,5 @@
+import "server-only";
+
 import { createCipheriv, createDecipheriv, randomBytes } from "node:crypto";
 
 type Envelope = { v: 1; iv: string; tag: string; ciphertext: string };

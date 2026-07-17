@@ -1,3 +1,5 @@
+import "server-only";
+
 import { getDb } from "@/db/client";
 import { txlineCredentials } from "@/db/schema";
 import type { Network } from "@/lib/network/config";
@@ -79,6 +81,30 @@ function subscriptionExpiry(
   );
 }
 
+function validateSubscriptionBoundary(input: CredentialStateInput): void {
+  if (input.setupState === "guest_created") {
+    if (input.durationWeeks != null || input.serviceLevelId != null) {
+      throw new Error(
+        "Guest-created credentials cannot include subscription terms",
+      );
+    }
+    return;
+  }
+
+  if (input.durationWeeks !== 4) {
+    throw new Error("Subscribed credentials require a four-week duration");
+  }
+
+  const allowedServiceLevels =
+    input.network === "devnet" ? [1] : [1, 12];
+  if (
+    input.serviceLevelId == null ||
+    !allowedServiceLevels.includes(input.serviceLevelId)
+  ) {
+    throw new Error(`Unsupported ${input.network} service level`);
+  }
+}
+
 export async function getCredential(
   userId: string,
   network: Network,
@@ -102,6 +128,7 @@ export async function getCredential(
 export async function upsertCredentialState(
   input: CredentialStateInput,
 ): Promise<void> {
+  validateSubscriptionBoundary(input);
   if (input.setupState === "activated" && !input.apiToken) {
     throw new Error("Activated credentials require an API token");
   }

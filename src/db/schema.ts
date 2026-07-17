@@ -1,4 +1,5 @@
 import {
+  check,
   integer,
   pgEnum,
   pgTable,
@@ -7,6 +8,7 @@ import {
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 
 export const network = pgEnum("network", ["devnet", "mainnet"]);
 
@@ -80,6 +82,23 @@ export const txlineCredentials = pgTable(
     uniqueIndex("txline_credentials_user_id_network_unique").on(
       table.userId,
       table.network,
+    ),
+    check(
+      "txline_credentials_duration_weeks_check",
+      sql`(${table.setupState} = 'guest_created' AND ${table.durationWeeks} IS NULL)
+        OR (${table.setupState} IN ('subscribed', 'activated') AND ${table.durationWeeks} = 4)`,
+    ),
+    check(
+      "txline_credentials_service_level_check",
+      sql`(${table.setupState} = 'guest_created' AND ${table.serviceLevelId} IS NULL)
+        OR (${table.setupState} IN ('subscribed', 'activated')
+          AND ${table.network} = 'devnet'
+          AND ${table.serviceLevelId} IS NOT NULL
+          AND ${table.serviceLevelId} = 1)
+        OR (${table.setupState} IN ('subscribed', 'activated')
+          AND ${table.network} = 'mainnet'
+          AND ${table.serviceLevelId} IS NOT NULL
+          AND ${table.serviceLevelId} IN (1, 12))`,
     ),
   ],
 );

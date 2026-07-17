@@ -25,7 +25,18 @@ CREATE TABLE "txline_credentials" (
 	"guest_jwt_expires_at" timestamp with time zone NOT NULL,
 	"subscription_expires_at" timestamp with time zone,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+	CONSTRAINT "txline_credentials_duration_weeks_check" CHECK (("txline_credentials"."setup_state" = 'guest_created' AND "txline_credentials"."duration_weeks" IS NULL)
+        OR ("txline_credentials"."setup_state" IN ('subscribed', 'activated') AND "txline_credentials"."duration_weeks" = 4)),
+	CONSTRAINT "txline_credentials_service_level_check" CHECK (("txline_credentials"."setup_state" = 'guest_created' AND "txline_credentials"."service_level_id" IS NULL)
+        OR ("txline_credentials"."setup_state" IN ('subscribed', 'activated')
+          AND "txline_credentials"."network" = 'devnet'
+          AND "txline_credentials"."service_level_id" IS NOT NULL
+          AND "txline_credentials"."service_level_id" = 1)
+        OR ("txline_credentials"."setup_state" IN ('subscribed', 'activated')
+          AND "txline_credentials"."network" = 'mainnet'
+          AND "txline_credentials"."service_level_id" IS NOT NULL
+          AND "txline_credentials"."service_level_id" IN (1, 12)))
 );
 --> statement-breakpoint
 CREATE TABLE "users" (
