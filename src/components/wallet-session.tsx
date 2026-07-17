@@ -2,7 +2,7 @@
 
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 
 type Session = { userId: string; walletPublicKey: string };
 
@@ -10,6 +10,14 @@ type TestWallet = {
   publicKey: string;
   signMessage: (message: Uint8Array) => Promise<Uint8Array>;
 };
+
+function base64(bytes: Uint8Array): string {
+  let binary = "";
+  bytes.forEach((byte) => {
+    binary += String.fromCharCode(byte);
+  });
+  return btoa(binary);
+}
 
 declare global {
   interface Window {
@@ -28,6 +36,11 @@ export function WalletSession({
   const [session, setSession] = useState<Session | null>(null);
   const [error, setError] = useState<string>();
   const [busy, setBusy] = useState(false);
+  const hydrated = useSyncExternalStore(
+    () => () => undefined,
+    () => true,
+    () => false,
+  );
   const testWallet =
     typeof window === "undefined" ? undefined : window.__TXLINE_TEST_WALLET__;
   const publicKey =
@@ -80,7 +93,7 @@ export function WalletSession({
           nonce: challenge.nonce,
           issuedAt: challenge.issuedAt,
           expiresAt: challenge.expiresAt,
-          signature: Buffer.from(signature).toString("base64"),
+          signature: base64(signature),
         }),
       });
       const result = (await verifyResponse.json()) as Session & {
@@ -107,6 +120,7 @@ export function WalletSession({
       <h2 id="wallet-title">Wallet session</h2>
       {!publicKey ? (
         <button
+          disabled={!hydrated}
           onClick={() => {
             if (testWallet) setTestConnected(true);
             else setVisible(true);

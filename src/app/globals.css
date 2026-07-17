@@ -253,6 +253,107 @@ h1 {
   color: var(--blue);
 }
 
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.feature-card {
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: var(--shadow);
+}
+
+.feature-card h2,
+.feature-card h3 {
+  margin-top: 0;
+}
+
+.feature-card button,
+.feature-card select {
+  min-height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 13px;
+  color: var(--ink);
+  background: var(--surface);
+}
+
+.feature-card button {
+  cursor: pointer;
+}
+
+.feature-card button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.feature-card pre,
+.feature-card code {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-size: 0.75rem;
+}
+
+.feature-card pre {
+  max-height: 280px;
+  overflow: auto;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--paper);
+}
+
+.setup-steps li[data-complete="true"],
+.success,
+.validation-pass,
+.stream-live {
+  color: #087b66;
+}
+
+.fixture-list {
+  padding: 0;
+  list-style: none;
+}
+
+.fixture-list button {
+  width: 100%;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+.fixture-list button[aria-pressed="true"] {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+.stream-grid,
+.replay-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.stream-panel {
+  min-width: 0;
+  flex: 1 1 260px;
+}
+
+.stream-state {
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  text-transform: uppercase;
+}
+
+.validation-fail,
+.stream-failed,
+[role="alert"] {
+  color: #b42318;
+}
+
 footer {
   min-height: 84px;
   display: flex;
@@ -294,7 +395,8 @@ footer {
 
   .network-readout,
   .section-heading,
-  .stage-grid {
+  .stage-grid,
+  .feature-grid {
     grid-template-columns: 1fr;
   }
 
