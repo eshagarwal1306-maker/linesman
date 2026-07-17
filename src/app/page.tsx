@@ -1,50 +1,36 @@
 "use client";
 
+import { useCallback, useState } from "react";
 import { getNetworkConfig, type Network } from "../lib/network/config";
 import { useNetwork } from "../components/app-providers";
-
-const stages = [
-  {
-    title: "Wallet session",
-    description: "Connect a Solana wallet and establish an authenticated session.",
-    status: "Ready to connect",
-    available: true,
-  },
-  {
-    title: "TxLINE setup",
-    description: "Create, subscribe, and activate network-scoped credentials.",
-    status: "Connect wallet first",
-    available: false,
-  },
-  {
-    title: "Fixtures",
-    description: "Browse the current match schedule and select a fixture.",
-    status: "Complete setup first",
-    available: false,
-  },
-  {
-    title: "Live streams",
-    description: "Inspect live odds and score events without changing payloads.",
-    status: "Select a fixture first",
-    available: false,
-  },
-  {
-    title: "Replay",
-    description: "Play historical score records through the same event pipeline.",
-    status: "Select a completed fixture",
-    available: false,
-  },
-  {
-    title: "Validation",
-    description: "Verify observed score records against their on-chain proof.",
-    status: "Choose a score event first",
-    available: false,
-  },
-] as const;
+import { WalletSession } from "../components/wallet-session";
+import { TxlineSetup } from "../components/txline-setup";
+import { FixtureBrowser } from "../components/fixture-browser";
+import { LiveStream } from "../components/live-stream";
+import { ReplayPanel } from "../components/replay-panel";
+import { ValidationPanel } from "../components/validation-panel";
+import type { TxlineEvent } from "../lib/txline/types";
 
 export default function Home() {
   const { network, setNetwork } = useNetwork();
   const config = getNetworkConfig(network);
+  const [authenticated, setAuthenticated] = useState(false);
+  const [ready, setReady] = useState(false);
+  const [setupBusy, setSetupBusy] = useState(false);
+  const [fixtureId, setFixtureId] = useState<number | null>(null);
+  const [validationEvent, setValidationEvent] = useState<TxlineEvent>();
+  const handleSession = useCallback(
+    (session: { userId: string; walletPublicKey: string } | null) => {
+      setAuthenticated(Boolean(session));
+      if (!session) {
+        setReady(false);
+        setFixtureId(null);
+        setValidationEvent(undefined);
+      }
+    },
+    [],
+  );
+  const handleReady = useCallback((value: boolean) => setReady(value), []);
 
   return (
     <main>
@@ -57,6 +43,7 @@ export default function Home() {
           <label htmlFor="network">Network</label>
           <select
             id="network"
+            disabled={setupBusy}
             value={network}
             onChange={(event) => setNetwork(event.target.value as Network)}
           >
@@ -94,25 +81,17 @@ export default function Home() {
           <p>Integration path</p>
           <h2 id="pipeline-title">Build from wallet to proof.</h2>
         </div>
-        <div className="stage-grid">
-          {stages.map((stage, index) => (
-            <article
-              className={`stage-card${stage.available ? " stage-card-ready" : ""}`}
-              key={stage.title}
-            >
-              <div className="stage-index" aria-hidden="true">
-                {String(index + 1).padStart(2, "0")}
-              </div>
-              <div>
-                <h3>{stage.title}</h3>
-                <p>{stage.description}</p>
-              </div>
-              <span className="stage-status">
-                <span aria-hidden="true">{stage.available ? "●" : "◇"}</span>
-                {stage.status}
-              </span>
-            </article>
-          ))}
+        <div className="feature-grid">
+          <WalletSession onSession={handleSession} />
+          <TxlineSetup
+            authenticated={authenticated}
+            onReady={handleReady}
+            onBusy={setSetupBusy}
+          />
+          <FixtureBrowser active={ready} onSelect={setFixtureId} />
+          <LiveStream fixtureId={fixtureId} onVerify={setValidationEvent} />
+          <ReplayPanel fixtureId={fixtureId} onVerify={setValidationEvent} />
+          <ValidationPanel event={validationEvent} />
         </div>
       </section>
 
