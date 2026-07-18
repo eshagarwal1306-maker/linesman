@@ -1,3 +1,26 @@
+@import "tailwindcss";
+
+@theme {
+  /* Broadcast Night — Linesman's palette */
+  --color-bg: #0a0e14;
+  --color-surface: #121826;
+  --color-surface-raised: #161f30;
+  --color-border: #1e2a3a;
+  --color-accent: #00e676;
+  --color-alert: #ff4757;
+  --color-amber: #ffb300;
+  --color-text: #f4f6fa;
+  --color-muted: #a6b1c6;
+
+  --font-sans: var(--font-inter), "Inter", "Segoe UI", sans-serif;
+  --font-display: var(--font-anton), "Anton", "Arial Narrow", sans-serif;
+}
+
+/* The original starter template's CSS below uses bare element selectors
+   (h1, a, main, button, ...). Wrapped in @layer base so Tailwind utility
+   classes used on the same tags in the new Linesman UI always win, per
+   CSS cascade-layer rules (unlayered styles would otherwise beat both). */
+@layer base {
 :root {
   --ink: #10203a;
   --muted: #5c6f8d;
@@ -642,5 +665,56 @@ footer {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+}
+} /* end @layer base (legacy starter styles) */
+
+/* ---------------------------------------------------------------------- */
+/* Linesman — Broadcast Night                                             */
+/* ---------------------------------------------------------------------- */
+
+.linesman {
+  min-height: 100vh;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+}
+
+.linesman ::selection {
+  background: color-mix(in srgb, var(--color-accent) 35%, transparent);
+}
+
+@keyframes ln-pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent) 55%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 14px color-mix(in srgb, var(--color-accent) 0%, transparent);
+  }
+}
+
+.ln-pulse {
+  animation: ln-pulse-ring 1.6s ease-out;
+}
+
+@keyframes ln-ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.ln-ticker-track {
+  animation: ln-ticker 28s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ln-ticker-track {
+    animation: none;
+  }
+  .ln-pulse {
+    animation: none;
   }
 }

@@ -1,0 +1,22 @@
+export function EmptyState({ lastScanAt }: { lastScanAt: number }) {
+  return (
+    <div className="flex flex-col items-center gap-4 rounded-2xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] px-6 py-14 text-center">
+      <svg width="72" height="52" viewBox="0 0 72 52" fill="none" aria-hidden="true">
+        <rect x="1" y="1" width="70" height="50" rx="6" stroke="var(--color-accent)" strokeWidth="2" />
+        <line x1="36" y1="1" x2="36" y2="51" stroke="var(--color-accent)" strokeWidth="2" />
+        <circle cx="36" cy="26" r="6" stroke="var(--color-accent)" strokeWidth="2" />
+        <path d="M1 26H30" stroke="var(--color-accent)" strokeWidth="2" strokeDasharray="4 4" />
+        <path d="M42 26H71" stroke="var(--color-accent)" strokeWidth="2" strokeDasharray="4 4" />
+      </svg>
+      <p className="font-display text-xl uppercase tracking-wide text-[color:var(--color-text)]">
+        Markets are efficient right now
+      </p>
+      <p className="max-w-xs text-sm text-[color:var(--color-muted)]">
+        We&rsquo;ll ping you the moment a sharp line and a venue price disagree by enough to matter.
+      </p>
+      <p className="text-xs text-[color:var(--color-muted)]">
+        Last scan {new Date(lastScanAt).toLocaleTimeString()}
+      </p>
+    </div>
+  );
+}

@@ -1,6 +1,8 @@
 import {
   check,
+  index,
   integer,
+  jsonb,
   pgEnum,
   pgTable,
   text,
@@ -102,5 +104,39 @@ export const txlineCredentials = pgTable(
           AND ${table.serviceLevelId} IS NOT NULL
           AND ${table.serviceLevelId} IN (1, 12))`,
     ),
+  ],
+);
+
+/**
+ * Raw TxLINE SSE packets, recorded verbatim (zero transformation on write —
+ * the replay engine decodes on read). Powers the Replay tab + Showcase mode
+ * once `pnpm record` has captured a live session.
+ */
+export const recordings = pgTable(
+  "recordings",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    recordingId: text("recording_id").notNull(),
+    ts: timestamp("ts", { withTimezone: true }).defaultNow().notNull(),
+    kind: text("kind").notNull(), // "odds" | "score" | "heartbeat"
+    raw: jsonb("raw").notNull(),
+  },
+  (table) => [
+    index("recordings_recording_id_ts_idx").on(table.recordingId, table.ts),
+  ],
+);
+
+/** Venue price polls captured alongside a recording so replay can reproduce both sides of the gap. */
+export const venueSnapshots = pgTable(
+  "venue_snapshots",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    recordingId: text("recording_id").notNull(),
+    ts: timestamp("ts", { withTimezone: true }).defaultNow().notNull(),
+    venue: text("venue").notNull(),
+    raw: jsonb("raw").notNull(),
+  },
+  (table) => [
+    index("venue_snapshots_recording_id_ts_idx").on(table.recordingId, table.ts),
   ],
 );
