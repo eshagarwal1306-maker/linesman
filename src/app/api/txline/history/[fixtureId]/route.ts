@@ -21,24 +21,43 @@ export async function GET(
       network,
       `/api/scores/historical/${fixtureId}`,
     );
+    const text = await upstream.text();
     if (!upstream.ok) {
       return NextResponse.json(
-        { error: `History request failed (${upstream.status})` },
+        {
+          error: `History request failed (${upstream.status})`,
+          detail: text.slice(0, 300),
+        },
         { status: upstream.status },
       );
     }
-    const raw: unknown = await upstream.json();
+    // TxLINE often returns an empty body when the fixture is outside the
+    // 2-week to 6-hour historical window.
+    if (!text.trim()) {
+      return NextResponse.json([]);
+    }
+    let raw: unknown;
+    try {
+      raw = JSON.parse(text) as unknown;
+    } catch {
+      throw new Error("History response was not valid JSON");
+    }
     const records = Array.isArray(raw)
       ? raw
       : raw && typeof raw === "object" && "scores" in raw
         ? (raw as { scores: unknown }).scores
         : [];
     if (!Array.isArray(records)) throw new Error("Invalid history response");
-    return NextResponse.json(
-      records
-        .map((record) => normalizeScoreEvent(record, "history"))
-        .sort((a, b) => a.timestamp - b.timestamp),
-    );
+    const normalized = [];
+    for (const record of records) {
+      try {
+        normalized.push(normalizeScoreEvent(record, "history"));
+      } catch {
+        // Skip malformed rows rather than failing the whole replay panel.
+      }
+    }
+    normalized.sort((a, b) => a.timestamp - b.timestamp);
+    return NextResponse.json(normalized);
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "History request failed" },

@@ -3,7 +3,7 @@
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 
 import { useNetwork } from "@/components/app-providers";
 
@@ -93,9 +93,11 @@ export function WalletSession({
 
   useEffect(() => {
     let current = true;
-    if (!publicKey) return () => {
-      current = false;
-    };
+    if (!publicKey) {
+      return () => {
+        current = false;
+      };
+    }
     let key: PublicKey;
     try {
       key = new PublicKey(publicKey);
@@ -119,6 +121,16 @@ export function WalletSession({
       current = false;
     };
   }, [balanceIdentity, connection, publicKey]);
+
+  const connectWallet = useCallback(() => {
+    setError(undefined);
+    if (testWallet) {
+      setTestConnected(true);
+      return;
+    }
+    // Modal select + WalletProvider autoConnect handles the connect handshake.
+    setVisible(true);
+  }, [testWallet, setVisible]);
 
   async function signIn() {
     if (!publicKey) return;
@@ -172,38 +184,67 @@ export function WalletSession({
   async function logout() {
     await fetch("/api/auth/logout", { method: "POST" });
     setSession(null);
+    if (wallet.connected) {
+      try {
+        await wallet.disconnect();
+      } catch {
+        // ignore disconnect races
+      }
+    }
+    setTestConnected(false);
   }
+
+  const shortKey = publicKey
+    ? `${publicKey.slice(0, 4)}…${publicKey.slice(-4)}`
+    : "";
 
   return (
     <section className="feature-card" aria-labelledby="wallet-title">
       <h2 id="wallet-title">Wallet session</h2>
       {!publicKey ? (
-        <button
-          disabled={!hydrated}
-          onClick={() => {
-            if (testWallet) setTestConnected(true);
-            else setVisible(true);
-          }}
-        >
-          Connect wallet
+        <button disabled={!hydrated || busy} onClick={() => void connectWallet()}>
+          {busy ? "Connecting…" : "Connect wallet"}
         </button>
       ) : authenticatedSession ? (
         <>
-          <p>Signed in as {authenticatedSession.walletPublicKey}</p>
+          <p className="wallet-line">
+            Signed in as <code>{shortKey}</code>
+          </p>
           {displayedBalance !== undefined && (
-            <p>{displayedBalance.toLocaleString(undefined, { maximumFractionDigits: 4 })} SOL on {network}</p>
+            <p>
+              {displayedBalance.toLocaleString(undefined, {
+                maximumFractionDigits: 4,
+              })}{" "}
+              SOL on {network}
+            </p>
           )}
-          <button onClick={logout}>Log out</button>
+          <button onClick={() => void logout()}>Log out</button>
         </>
       ) : (
         <>
-          <p>{publicKey}</p>
+          <p className="wallet-line">
+            Connected <code>{shortKey}</code>
+          </p>
           {displayedBalance !== undefined && (
-            <p>{displayedBalance.toLocaleString(undefined, { maximumFractionDigits: 4 })} SOL on {network}</p>
+            <p>
+              {displayedBalance.toLocaleString(undefined, {
+                maximumFractionDigits: 4,
+              })}{" "}
+              SOL on {network}
+            </p>
           )}
-          <button disabled={busy || walletMismatch} onClick={signIn}>
-            {busy ? "Signing in…" : "Sign in"}
-          </button>
+          <div className="wallet-actions">
+            <button disabled={busy || walletMismatch} onClick={() => void signIn()}>
+              {busy ? "Signing in…" : "Sign in"}
+            </button>
+            <button
+              type="button"
+              className="button-secondary"
+              onClick={() => void logout()}
+            >
+              Disconnect
+            </button>
+          </div>
         </>
       )}
       {walletMismatch && (

@@ -124,6 +124,33 @@ export async function getCredential(
   };
 }
 
+/**
+ * Drop a consumed/failed subscription while keeping (or replacing) the guest JWT
+ * so the wallet can submit a fresh on-chain subscribe + activate.
+ */
+export async function resetCredentialForResubscribe(input: {
+  userId: string;
+  network: Network;
+  jwt?: string;
+}): Promise<void> {
+  const existing = await getCredential(input.userId, input.network);
+  const jwt = input.jwt ?? existing?.jwt;
+  if (!jwt) {
+    throw new Error("Create a guest credential before resetting setup");
+  }
+  await upsertCredentialState({
+    userId: input.userId,
+    network: input.network,
+    jwt,
+    apiToken: null,
+    subscriptionTxSignature: null,
+    serviceLevelId: null,
+    durationWeeks: null,
+    setupState: "guest_created",
+    subscriptionCreatedAt: null,
+  });
+}
+
 export async function upsertCredentialState(
   input: CredentialStateInput,
 ): Promise<void> {

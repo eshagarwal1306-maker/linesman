@@ -12,7 +12,8 @@ export class ReplayController {
   ) {}
 
   play(): void {
-    if (this.playing || this.index >= this.events.length) return;
+    if (this.playing || this.events.length === 0) return;
+    if (this.index >= this.events.length) this.index = 0;
     this.playing = true;
     this.emitAndSchedule();
   }

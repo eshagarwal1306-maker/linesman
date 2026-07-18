@@ -11,8 +11,13 @@ function numericField(
   ...keys: string[]
 ): number | undefined {
   for (const key of keys) {
-    if (typeof value[key] === "number" && Number.isFinite(value[key])) {
-      return value[key];
+    const candidate = value[key];
+    if (typeof candidate === "number" && Number.isFinite(candidate)) {
+      return candidate;
+    }
+    if (typeof candidate === "string" && candidate.trim() !== "") {
+      const parsed = Number(candidate);
+      if (Number.isFinite(parsed)) return parsed;
     }
   }
 }

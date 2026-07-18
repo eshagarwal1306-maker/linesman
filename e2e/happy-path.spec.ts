@@ -96,7 +96,7 @@ test("wallet login activates TxLINE and loads the dashboard", async ({ page }) =
   await page.getByRole("button", { name: "Set up TxLINE" }).click();
   await expect(page.getByText("TxLINE ready")).toBeVisible();
   await expect(page.getByText("Argentina vs Spain")).toBeVisible();
-  await expect(page.getByText("Live scores")).toBeVisible();
+  await expect(page.getByText("StablePrice markets")).toBeVisible();
   const activationMessages = await page.evaluate(
     () =>
       (

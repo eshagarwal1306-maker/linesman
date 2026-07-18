@@ -1,15 +1,11 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getNetworkConfig, type Network } from "../lib/network/config";
 import { useNetwork } from "../components/app-providers";
 import { WalletSession } from "../components/wallet-session";
 import { TxlineSetup } from "../components/txline-setup";
-import { FixtureBrowser } from "../components/fixture-browser";
-import { LiveStream } from "../components/live-stream";
-import { ReplayPanel } from "../components/replay-panel";
-import { ValidationPanel } from "../components/validation-panel";
-import type { TxlineEvent } from "../lib/txline/types";
+import { MatchWorkspace } from "../components/match-workspace";
 
 export default function Home() {
   const { network, setNetwork } = useNetwork();
@@ -17,20 +13,18 @@ export default function Home() {
   const [authenticated, setAuthenticated] = useState(false);
   const [ready, setReady] = useState(false);
   const [setupBusy, setSetupBusy] = useState(false);
-  const [fixtureId, setFixtureId] = useState<number | null>(null);
-  const [validationEvent, setValidationEvent] = useState<TxlineEvent>();
   const handleSession = useCallback(
     (session: { userId: string; walletPublicKey: string } | null) => {
       setAuthenticated(Boolean(session));
-      if (!session) {
-        setReady(false);
-        setFixtureId(null);
-        setValidationEvent(undefined);
-      }
+      if (!session) setReady(false);
     },
     [],
   );
   const handleReady = useCallback((value: boolean) => setReady(value), []);
+
+  useEffect(() => {
+    setReady(false);
+  }, [network]);
 
   return (
     <main>
@@ -55,10 +49,14 @@ export default function Home() {
 
       <section className="hero" id="top">
         <p className="eyebrow">Solana data integration workspace</p>
-        <h1>One signal path.<br />No crossed networks.</h1>
+        <h1>
+          One signal path.
+          <br />
+          No crossed networks.
+        </h1>
         <p className="intro">
-          A neutral foundation for connecting a wallet, activating TxLINE,
-          streaming match data, replaying history, and validating proofs.
+          Connect a wallet, activate TxLINE, then read live StablePrice markets
+          in plain language — with replay and proof tools underneath.
         </p>
         <dl className="network-readout">
           <div>
@@ -78,26 +76,28 @@ export default function Home() {
 
       <section className="pipeline" aria-labelledby="pipeline-title">
         <div className="section-heading">
-          <p>Integration path</p>
-          <h2 id="pipeline-title">Build from wallet to proof.</h2>
+          <p>Access</p>
+          <h2 id="pipeline-title">Wallet, then data.</h2>
         </div>
-        <div className="feature-grid">
+        <div className="feature-grid setup-grid">
           <WalletSession onSession={handleSession} />
           <TxlineSetup
             authenticated={authenticated}
             onReady={handleReady}
             onBusy={setSetupBusy}
           />
-          <FixtureBrowser active={ready} onSelect={setFixtureId} />
-          <LiveStream fixtureId={fixtureId} onVerify={setValidationEvent} />
-          <ReplayPanel fixtureId={fixtureId} onVerify={setValidationEvent} />
-          <ValidationPanel event={validationEvent} />
         </div>
+      </section>
+
+      <section className="pipeline">
+        <MatchWorkspace active={ready} />
       </section>
 
       <footer>
         <span>TxLINE starter</span>
-        <span>{config.programId.slice(0, 8)}…{config.programId.slice(-6)}</span>
+        <span>
+          {config.programId.slice(0, 8)}…{config.programId.slice(-6)}
+        </span>
       </footer>
     </main>
   );

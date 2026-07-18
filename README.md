@@ -55,9 +55,11 @@ Activation is:
 4. Send the base64 wallet signature and `leagues: []` to `/api/token/activate`.
 5. Encrypt the returned API token server-side. It is never returned to browser JavaScript. The guest JWT is exposed only in step 3's one-time preimage.
 
-The proxy uses `/api/fixtures/snapshot`, `/api/odds/snapshot/:fixtureId`, `/api/scores/snapshot/:fixtureId`, `/api/odds/stream`, `/api/scores/stream`, `/api/scores/historical/:fixtureId`, and `/api/scores/stat-validation`. A `401` renews the same-network guest JWT once; a `403` is reported as a wallet/subscription/network mismatch.
+The proxy uses `/api/fixtures/snapshot`, `/api/odds/snapshot/:fixtureId`, `/api/scores/snapshot/:fixtureId`, `/api/odds/stream`, `/api/scores/stream`, `/api/scores/historical/:fixtureId`, and `/api/scores/stat-validation`. A `401` renews the same-network guest JWT once; a `403` is reported as a wallet/subscription/network mismatch. `POST /api/txline/setup/reset` clears a stored credential and, on request, starts a fresh guest session so a wallet can resubscribe without leaving stale TxLINE state behind.
 
 Browser stream buffers retain at most 250 messages. Sequence values are preserved exactly and records without a real `seq`/`Seq` cannot be verified. Vercel functions are not permanent workers: the stream route has a 60-second maximum duration and the browser reconnects with `Last-Event-ID` and bounded exponential backoff.
+
+`MatchWorkspace` (`src/components/match-workspace.tsx`) is the post-activation surface: it lists fixtures, decodes the live odds stream into plain-language StablePrice ticks (`src/lib/txline/odds-format.ts`), and hosts replay and proof validation for the selected match in one place. Fixture list filtering (e.g. which matches are eligible for historical replay) lives in `src/lib/txline/fixtures.ts`, and both modules have Vitest coverage alongside their implementation.
 
 ## Manual devnet checklist
 

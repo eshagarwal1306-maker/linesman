@@ -253,10 +253,128 @@ h1 {
   color: var(--blue);
 }
 
-.feature-grid {
+.feature-grid,
+.setup-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
+}
+
+.match-layout {
+  display: grid;
+  grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
+  gap: 16px;
+}
+
+.match-main {
+  display: grid;
+  gap: 16px;
+}
+
+.match-secondary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.match-hero-card h3 {
+  margin: 0 0 10px;
+  font-family: "Arial Narrow", "Avenir Next Condensed", sans-serif;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.match-hero-card h3 span {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.board-header {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.board-header h3 {
+  margin: 0;
+}
+
+.market-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.market-card {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper);
+}
+
+.market-card header h4 {
+  margin: 0 0 4px;
+  font-size: 0.98rem;
+}
+
+.market-card header p {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.selection-row {
+  display: grid;
+  gap: 8px;
+}
+
+.selection {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 10px;
+  align-items: baseline;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.selection-name {
+  font-size: 0.9rem;
+}
+
+.selection-odds {
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-size: 1.05rem;
+  color: var(--blue);
+}
+
+.selection-pct {
+  min-width: 3.5rem;
+  color: var(--muted);
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-size: 0.75rem;
+  text-align: right;
+}
+
+.legend-list {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.raw-details {
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.fixture-rail {
+  align-self: start;
+  max-height: 80vh;
+  overflow: auto;
 }
 
 .feature-card {
@@ -323,12 +441,34 @@ h1 {
 .fixture-list button {
   width: 100%;
   margin-bottom: 8px;
+  display: grid;
+  gap: 4px;
   text-align: left;
 }
 
 .fixture-list button[aria-pressed="true"] {
   border-color: var(--blue);
   color: var(--blue);
+}
+
+.fixture-name {
+  display: block;
+  font-weight: 600;
+}
+
+.fixture-meta,
+.fixture-hint,
+.stream-help,
+.stream-heartbeat,
+.stream-empty {
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.fixture-meta {
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-size: 0.72rem;
 }
 
 .stream-grid,
@@ -396,7 +536,10 @@ footer {
   .network-readout,
   .section-heading,
   .stage-grid,
-  .feature-grid {
+  .feature-grid,
+  .setup-grid,
+  .match-layout,
+  .match-secondary {
     grid-template-columns: 1fr;
   }
 
@@ -407,6 +550,93 @@ footer {
   .stage-card {
     min-height: 225px;
   }
+}
+
+.wallet-line code {
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-size: 0.9em;
+}
+
+.wallet-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.feature-card .button-secondary {
+  background: transparent;
+}
+
+/* Wallet modal — override default purple/dark adapter chrome */
+.wallet-adapter-modal-wrapper {
+  z-index: 1000;
+  background: rgba(16, 32, 58, 0.45);
+  backdrop-filter: blur(4px);
+}
+
+.wallet-adapter-modal {
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+
+.wallet-adapter-modal-title {
+  color: var(--ink);
+  font-family: "Arial Narrow", "Avenir Next Condensed", sans-serif;
+  font-size: 1.35rem;
+  letter-spacing: -0.03em;
+}
+
+.wallet-adapter-modal-list {
+  margin: 0 0 8px;
+}
+
+.wallet-adapter-modal-list .wallet-adapter-button {
+  width: 100%;
+  height: 52px;
+  justify-content: flex-start;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: inherit;
+  font-weight: 600;
+}
+
+.wallet-adapter-modal-list .wallet-adapter-button:not([disabled]):hover {
+  border-color: var(--blue);
+  background: #eef3ff;
+  color: var(--ink);
+}
+
+.wallet-adapter-modal-list .wallet-adapter-button-end-icon,
+.wallet-adapter-modal-list .wallet-adapter-button-start-icon,
+.wallet-adapter-modal-list .wallet-adapter-button-end-icon img,
+.wallet-adapter-modal-list .wallet-adapter-button-start-icon img {
+  width: 28px;
+  height: 28px;
+}
+
+.wallet-adapter-modal-button-close {
+  background: var(--paper);
+}
+
+.wallet-adapter-modal-button-close:hover {
+  background: var(--line);
+}
+
+.wallet-adapter-modal-button-close svg {
+  fill: var(--ink);
+}
+
+.wallet-adapter-modal-middle-button {
+  color: var(--blue);
+  background: transparent;
+  font-weight: 600;
 }
 
 @media (prefers-reduced-motion: reduce) {
