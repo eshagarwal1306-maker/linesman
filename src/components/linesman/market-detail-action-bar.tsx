@@ -2,6 +2,7 @@
 
 import type { ProofRef, VenuePrice } from "@/lib/types";
 import { VerifyOnChainButton } from "@/components/linesman/verify-onchain-button";
+import { IconArrowUpRight } from "@/components/linesman/icons";
 
 /** Mobile-only sticky bottom action bar — the two things a fan actually taps on a market detail page. */
 export function MarketDetailActionBar({
@@ -26,10 +27,11 @@ export function MarketDetailActionBar({
           href={bestVenue.venueUrl}
           target="_blank"
           rel="noreferrer"
-          className="flex min-h-11 flex-1 items-center justify-center rounded-full py-2.5 text-center text-xs font-semibold text-[color:var(--color-bg)] transition-transform active:scale-[0.97]"
+          className="flex min-h-11 flex-1 items-center justify-center gap-1 rounded-full py-2.5 text-center text-xs font-semibold text-[color:var(--color-bg)] transition-transform active:scale-[0.97]"
           style={{ background: "var(--color-accent)" }}
         >
-          Trade on {bestVenue.venue === "polymarket" ? "Polymarket" : "Kalshi"} ↗
+          Trade on {bestVenue.venue === "polymarket" ? "Polymarket" : "Kalshi"}
+          <IconArrowUpRight className="h-3.5 w-3.5" />
         </a>
       )}
     </div>

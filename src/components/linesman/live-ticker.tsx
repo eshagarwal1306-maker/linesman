@@ -8,10 +8,10 @@ import type { LiveWinnerMarket } from "@/lib/sources/polymarket";
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 const FALLBACK_ITEMS = [
-  "🏆 FINAL · FRA vs ARG · Live",
-  "🥉 3RD PLACE · POR vs BRA · Live",
-  "⛓ Sharp lines anchored on Solana every packet",
-  "🛡 140 markets under Watchdog audit",
+  "FINAL · FRA vs ARG · Live",
+  "3RD PLACE · POR vs BRA · Live",
+  "Sharp lines anchored on Solana every packet",
+  "140 markets under Watchdog audit",
 ];
 
 function formatPct(probability: number): string {
@@ -27,7 +27,7 @@ export function LiveTicker() {
   const liveItems =
     market && market.contenders.length > 0
       ? [
-          `🔴 LIVE · Polymarket ${market.eventTitle} · ${market.contenders
+          `LIVE · Polymarket ${market.eventTitle} · ${market.contenders
             .slice(0, 2)
             .map((c) => `${c.team} ${formatPct(c.probability)}`)
             .join(" vs ")}`,

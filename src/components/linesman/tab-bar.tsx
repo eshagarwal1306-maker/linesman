@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { IconBolt, IconClock, IconShield } from "@/components/linesman/icons";
 
 const TABS = [
-  { href: "/feed", label: "Feed", icon: "⚡" },
-  { href: "/watchdog", label: "Watchdog", icon: "🛡" },
-  { href: "/replay", label: "Replay", icon: "⏱" },
+  { href: "/feed", label: "Feed", Icon: IconBolt },
+  { href: "/watchdog", label: "Watchdog", Icon: IconShield },
+  { href: "/replay", label: "Replay", Icon: IconClock },
 ] as const;
 
 export function TabBar() {
@@ -28,9 +29,7 @@ export function TabBar() {
               className="flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px] font-medium uppercase tracking-wide transition-transform active:scale-95"
               style={{ color: active ? "var(--color-accent)" : "var(--color-muted)" }}
             >
-              <span aria-hidden="true" className="text-base leading-none">
-                {tab.icon}
-              </span>
+              <tab.Icon className="h-[19px] w-[19px]" />
               {tab.label}
             </Link>
           );

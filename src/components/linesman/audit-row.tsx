@@ -7,14 +7,28 @@ import { formatLag } from "@/lib/format";
 import { shortSignature } from "@/lib/solana/proofs";
 import { VerifyOnChainButton } from "@/components/linesman/verify-onchain-button";
 import { ShareButton } from "@/components/linesman/share-button";
+import { IconAlertTriangle, IconCheck, IconClock } from "@/components/linesman/icons";
 
 type AuditWithLabel = SettlementAudit & { fixtureLabel?: string };
 
-const VERDICT_STYLE: Record<SettlementAudit["verdict"], { label: string; color: string; glow?: string }> = {
-  correct: { label: "✅ Correct", color: "var(--color-accent)" },
-  late: { label: "⏱ Late", color: "var(--color-amber)", glow: "0 0 24px color-mix(in srgb, var(--color-amber) 30%, transparent)" },
-  incorrect: { label: "⚠️ Incorrect", color: "var(--color-alert)", glow: "0 0 24px color-mix(in srgb, var(--color-alert) 35%, transparent)" },
-  unresolved: { label: "… Unresolved", color: "var(--color-muted)" },
+const VERDICT_STYLE: Record<
+  SettlementAudit["verdict"],
+  { label: string; color: string; glow?: string; Icon?: typeof IconCheck }
+> = {
+  correct: { label: "Correct", color: "var(--color-accent)", Icon: IconCheck },
+  late: {
+    label: "Late",
+    color: "var(--color-amber)",
+    glow: "0 0 24px color-mix(in srgb, var(--color-amber) 30%, transparent)",
+    Icon: IconClock,
+  },
+  incorrect: {
+    label: "Incorrect",
+    color: "var(--color-alert)",
+    glow: "0 0 24px color-mix(in srgb, var(--color-alert) 35%, transparent)",
+    Icon: IconAlertTriangle,
+  },
+  unresolved: { label: "Unresolved", color: "var(--color-muted)" },
 };
 
 export function AuditRow({ audit }: { audit: AuditWithLabel }) {
@@ -47,19 +61,20 @@ export function AuditRow({ audit }: { audit: AuditWithLabel }) {
           <p className="mt-0.5 text-sm font-medium leading-snug text-[color:var(--color-text)]">
             {audit.question}
           </p>
-          <div className="mt-2 flex items-center justify-between text-xs text-[color:var(--color-muted)]">
-            <span>
+          <div className="mt-2 flex flex-col gap-0.5 text-xs text-[color:var(--color-muted)] sm:flex-row sm:items-center sm:justify-between sm:gap-2">
+            <span className="truncate">
               {audit.verdict === "unresolved"
                 ? "Awaiting resolution"
                 : `resolved ${formatLag(audit.lagMinutes)} after full time`}
             </span>
-            <span className="font-mono">{shortSignature(audit.proofRef.txSignature)}</span>
+            <span className="truncate font-mono">{shortSignature(audit.proofRef.txSignature)}</span>
           </div>
         </div>
         <span
-          className="shrink-0 rounded-full px-2.5 py-1 text-[11px] font-bold"
+          className="flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold"
           style={{ color: style.color, border: `1px solid ${style.color}` }}
         >
+          {style.Icon && <style.Icon className="h-3 w-3" />}
           {style.label}
         </span>
       </button>

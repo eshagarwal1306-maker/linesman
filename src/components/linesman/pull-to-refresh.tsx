@@ -2,6 +2,7 @@
 
 import { motion, useMotionValue, useTransform } from "framer-motion";
 import { useRef, useState, type ReactNode, type TouchEvent } from "react";
+import { IconArrowDown } from "@/components/linesman/icons";
 
 const PULL_THRESHOLD = 64;
 
@@ -52,7 +53,7 @@ export function PullToRefresh({
         className="flex items-center justify-center overflow-hidden text-[color:var(--color-accent)]"
       >
         <motion.span style={{ rotate: refreshing ? undefined : rotate }} className={refreshing ? "animate-spin" : ""}>
-          ↓
+          <IconArrowDown className="h-4 w-4" />
         </motion.span>
       </motion.div>
       {children}

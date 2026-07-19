@@ -25,7 +25,7 @@ export function DisagreementDial({ score }: { score: number }) {
     <button
       type="button"
       onClick={() => setExpanded((v) => !v)}
-      className="flex w-full items-center gap-3 rounded-2xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-3.5 text-left transition-colors active:scale-[0.99] lg:p-4"
+      className="flex w-full items-center gap-3 rounded-[22px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-3.5 text-left shadow-[0_18px_36px_-26px_rgba(0,0,0,0.65)] transition-colors active:scale-[0.99] lg:p-4"
     >
       <svg
         width="64"

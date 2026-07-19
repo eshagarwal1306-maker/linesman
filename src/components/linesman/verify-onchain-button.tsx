@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { ProofRef } from "@/lib/types";
 import { accountExplorerUrl, explorerUrl, shortHash, shortSignature } from "@/lib/solana/proofs";
+import { IconArrowUpRight, IconChainLink, IconCheck, IconX } from "@/components/linesman/icons";
 
 interface VerifyApiResult {
   status: "verified" | "failed" | "fallback";
@@ -83,7 +84,8 @@ export function VerifyOnChainButton({
         className={base}
         style={{ background: "var(--color-accent)", color: "var(--color-bg)" }}
       >
-        {compact ? "Verify on-chain" : "⛓ Verify on-chain"}
+        {!compact && <IconChainLink className="h-3.5 w-3.5" />}
+        Verify on-chain
       </button>
     );
   }
@@ -109,10 +111,13 @@ export function VerifyOnChainButton({
         className="flex flex-col gap-1 rounded-xl px-3.5 py-2.5 text-xs"
         style={{ background: "color-mix(in srgb, var(--color-accent) 12%, transparent)", color: "var(--color-accent)" }}
       >
-        <span className="font-semibold">✓ Score verified on-chain{result.epochDay != null ? ` · epoch ${result.epochDay}` : ""}</span>
+        <span className="flex items-center gap-1.5 font-semibold">
+          <IconCheck className="h-3.5 w-3.5" />
+          Score verified on-chain{result.epochDay != null ? ` · epoch ${result.epochDay}` : ""}
+        </span>
         {link && (
-          <a href={link} target="_blank" rel="noreferrer" className="underline">
-            View daily root ↗
+          <a href={link} target="_blank" rel="noreferrer" className="flex items-center gap-1 underline">
+            View daily root <IconArrowUpRight className="h-3 w-3" />
           </a>
         )}
       </div>
@@ -125,7 +130,10 @@ export function VerifyOnChainButton({
         className="flex flex-col gap-1 rounded-xl px-3.5 py-2.5 text-xs"
         style={{ background: "color-mix(in srgb, var(--color-alert) 12%, transparent)", color: "var(--color-alert)" }}
       >
-        <span className="font-semibold">✗ On-chain check failed</span>
+        <span className="flex items-center gap-1.5 font-semibold">
+          <IconX className="h-3.5 w-3.5" />
+          On-chain check failed
+        </span>
         <span className="text-[color:var(--color-muted)]">{result.reason}</span>
       </div>
     );
@@ -144,8 +152,14 @@ export function VerifyOnChainButton({
         {result.txSignature && <span>{shortSignature(result.txSignature)}</span>}
       </div>
       {link && (
-        <a href={link} target="_blank" rel="noreferrer" className="font-medium underline" style={{ color: "var(--color-accent)" }}>
-          View anchored packet ↗
+        <a
+          href={link}
+          target="_blank"
+          rel="noreferrer"
+          className="flex items-center gap-1 font-medium underline"
+          style={{ color: "var(--color-accent)" }}
+        >
+          View anchored packet <IconArrowUpRight className="h-3 w-3" />
         </a>
       )}
     </div>

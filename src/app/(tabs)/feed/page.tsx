@@ -90,7 +90,7 @@ export default function FeedPage() {
             {[0, 1, 2, 3, 4, 5].map((key) => (
               <div
                 key={key}
-                className="h-[210px] animate-pulse rounded-2xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)]"
+                className="h-[210px] animate-pulse rounded-[22px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)]"
               />
             ))}
           </div>

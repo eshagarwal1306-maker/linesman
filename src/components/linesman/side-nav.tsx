@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useViewportStore } from "@/lib/store/viewport-store";
+import { IconBolt, IconClock, IconMonitor, IconShield, IconSmartphone } from "@/components/linesman/icons";
 
 const TABS = [
-  { href: "/feed", label: "Edge Feed", icon: "⚡" },
-  { href: "/watchdog", label: "Watchdog", icon: "🛡" },
-  { href: "/replay", label: "Replay", icon: "⏱" },
+  { href: "/feed", label: "Edge Feed", Icon: IconBolt },
+  { href: "/watchdog", label: "Watchdog", Icon: IconShield },
+  { href: "/replay", label: "Replay", Icon: IconClock },
 ] as const;
 
 export function SideNav() {
@@ -38,9 +39,7 @@ export function SideNav() {
                 background: active ? "color-mix(in srgb, var(--color-accent) 12%, transparent)" : "transparent",
               }}
             >
-              <span aria-hidden="true" className="text-base leading-none">
-                {tab.icon}
-              </span>
+              <tab.Icon className="h-[18px] w-[18px]" />
               {tab.label}
             </Link>
           );
@@ -52,19 +51,25 @@ export function SideNav() {
           Preview
         </p>
         <div className="flex rounded-full border border-[color:var(--color-border)] p-1">
-          {(["desktop", "phone"] as const).map((option) => (
+          {(
+            [
+              { value: "desktop", label: "Desktop", Icon: IconMonitor },
+              { value: "phone", label: "Phone", Icon: IconSmartphone },
+            ] as const
+          ).map((option) => (
             <button
-              key={option}
+              key={option.value}
               type="button"
-              onClick={() => setMode(option)}
-              className="min-h-9 flex-1 rounded-full px-3 text-xs font-semibold capitalize transition-colors"
+              onClick={() => setMode(option.value)}
+              className="flex min-h-9 flex-1 items-center justify-center gap-1.5 rounded-full px-3 text-xs font-semibold transition-colors"
               style={{
-                color: mode === option ? "var(--color-bg)" : "var(--color-muted)",
-                background: mode === option ? "var(--color-accent)" : "transparent",
+                color: mode === option.value ? "var(--color-bg)" : "var(--color-muted)",
+                background: mode === option.value ? "var(--color-accent)" : "transparent",
               }}
-              aria-pressed={mode === option}
+              aria-pressed={mode === option.value}
             >
-              {option}
+              <option.Icon className="h-3.5 w-3.5" />
+              {option.label}
             </button>
           ))}
         </div>

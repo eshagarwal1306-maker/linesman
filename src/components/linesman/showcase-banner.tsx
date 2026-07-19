@@ -3,6 +3,7 @@
 import { useState } from "react";
 import useSWR from "swr";
 import type { SourceStatus } from "@/lib/sources/manager";
+import { IconX } from "@/components/linesman/icons";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -17,8 +18,8 @@ export function ShowcaseBanner() {
 
   const isReplay = status.mode === "replay";
   const message = isReplay
-    ? "▶ Replaying real TxLINE data from the World Cup Final weekend"
-    : "▶ Showcase mode — seeded demo data. Connect a wallet on /starter for live odds.";
+    ? "Replaying real TxLINE data from the World Cup Final weekend"
+    : "Showcase mode — seeded demo data. Connect a wallet on /starter for live odds.";
 
   return (
     <div
@@ -28,14 +29,17 @@ export function ShowcaseBanner() {
         color: isReplay ? "var(--color-amber)" : "var(--color-muted)",
       }}
     >
-      <span className="truncate">{message}</span>
+      <span className="flex min-w-0 items-center gap-1.5 truncate">
+        <span className="h-1.5 w-1.5 shrink-0 animate-pulse rounded-full" style={{ background: "currentColor" }} />
+        {message}
+      </span>
       <button
         type="button"
         onClick={() => setDismissed(true)}
         aria-label="Dismiss"
         className="-m-2.5 shrink-0 rounded-full p-2.5 opacity-70 transition-opacity hover:opacity-100"
       >
-        ✕
+        <IconX className="h-3.5 w-3.5" />
       </button>
     </div>
   );

@@ -8,6 +8,7 @@ import { HowWePriceThis } from "@/components/linesman/how-we-price-this";
 import { VerifyStrip } from "@/components/linesman/verify-strip";
 import { MarketDetailActionBar } from "@/components/linesman/market-detail-action-bar";
 import { formatKickoffCountdown } from "@/lib/format";
+import { IconArrowUpRight } from "@/components/linesman/icons";
 
 export function MarketDetailView({ detail }: { detail: MarketDetail }) {
   const { sharp, edges, gapHistory, bookSelections } = detail;
@@ -16,7 +17,7 @@ export function MarketDetailView({ detail }: { detail: MarketDetail }) {
   return (
     <div className="flex flex-col gap-5">
       <div
-        className="rounded-2xl p-5"
+        className="rounded-[22px] p-5 shadow-[0_20px_44px_-24px_rgba(0,0,0,0.7)]"
         style={{
           background: `linear-gradient(135deg, ${sharp.homeTeam.primaryColor} 0%, var(--color-bg) 55%, ${sharp.awayTeam.primaryColor} 100%)`,
         }}
@@ -49,7 +50,7 @@ export function MarketDetailView({ detail }: { detail: MarketDetail }) {
         ))}
       </div>
 
-      <div className="rounded-2xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-4">
+      <div className="rounded-[22px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-4">
         <p className="mb-2 text-xs uppercase tracking-wide text-[color:var(--color-muted)]">Gap, last 2 hours</p>
         <DetailGapChart history={gapHistory} kickoffTime={sharp.kickoffTime} />
       </div>
@@ -64,10 +65,11 @@ export function MarketDetailView({ detail }: { detail: MarketDetail }) {
           href={bestVenue.venueUrl}
           target="_blank"
           rel="noreferrer"
-          className="hidden rounded-full py-3.5 text-center text-sm font-semibold text-[color:var(--color-bg)] transition-transform active:scale-[0.98] lg:block"
+          className="hidden items-center justify-center gap-1.5 rounded-full py-3.5 text-center text-sm font-semibold text-[color:var(--color-bg)] transition-transform active:scale-[0.98] lg:flex"
           style={{ background: "var(--color-accent)" }}
         >
-          Trade on {bestVenue.venue === "polymarket" ? "Polymarket" : "Kalshi"} ↗
+          Trade on {bestVenue.venue === "polymarket" ? "Polymarket" : "Kalshi"}
+          <IconArrowUpRight className="h-4 w-4" />
         </a>
       )}
 

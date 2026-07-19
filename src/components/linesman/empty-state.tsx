@@ -7,7 +7,7 @@ interface EmptyStateProps {
 
 export function EmptyState({ lastScanAt, isGenuinelyLive = false, mappedMarkets = 0 }: EmptyStateProps) {
   return (
-    <div className="flex flex-col items-center gap-4 rounded-2xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] px-6 py-14 text-center">
+    <div className="flex flex-col items-center gap-4 rounded-[22px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] px-6 py-14 text-center">
       <svg width="72" height="52" viewBox="0 0 72 52" fill="none" aria-hidden="true">
         <rect x="1" y="1" width="70" height="50" rx="6" stroke="var(--color-accent)" strokeWidth="2" />
         <line x1="36" y1="1" x2="36" y2="51" stroke="var(--color-accent)" strokeWidth="2" />

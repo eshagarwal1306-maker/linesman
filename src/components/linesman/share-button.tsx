@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { IconCheck, IconShare } from "@/components/linesman/icons";
 
 export function ShareButton({
   title,
@@ -45,7 +46,7 @@ export function ShareButton({
       className={compact ? "-m-2 flex h-11 w-11 items-center justify-center rounded-full p-2 text-sm" : "flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--color-border)] text-sm"}
       style={{ color: "var(--color-muted)" }}
     >
-      {copied ? "✓" : "↗"}
+      {copied ? <IconCheck className="h-4 w-4" /> : <IconShare className="h-4 w-4" />}
     </button>
   );
 }

@@ -6,10 +6,10 @@ import { getFixtureLabel } from "@/lib/sources/mock";
 export const runtime = "nodejs";
 
 const VERDICT_STYLE: Record<string, { label: string; color: string }> = {
-  correct: { label: "✅ Correct", color: "#00e676" },
-  late: { label: "⏱ Late", color: "#ffb300" },
-  incorrect: { label: "⚠️ Incorrect", color: "#ff4757" },
-  unresolved: { label: "… Unresolved", color: "#a6b1c6" },
+  correct: { label: "Correct", color: "#00e676" },
+  late: { label: "Late", color: "#ffb300" },
+  incorrect: { label: "Incorrect", color: "#ff4757" },
+  unresolved: { label: "Unresolved", color: "#a6b1c6" },
 };
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -66,7 +66,11 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 22, color: "#00e676" }}>
-          <span>⛓</span>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00e676" strokeWidth="2" strokeLinecap="round">
+            <path d="M9.5 14.5 14.5 9.5" />
+            <path d="M11 6.5 13 4.6a3.6 3.6 0 0 1 5.1 5.1L16.2 11.6" />
+            <path d="M13 17.5 11 19.4a3.6 3.6 0 0 1-5.1-5.1l1.9-1.9" />
+          </svg>
           <span>Proven on Solana · slot {audit.proofRef.slot?.toLocaleString() ?? "—"}</span>
         </div>
       </div>

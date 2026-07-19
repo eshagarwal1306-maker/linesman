@@ -73,7 +73,8 @@ export function ShowcaseStage() {
             color: mode === "live" ? "var(--color-accent)" : "var(--color-muted)",
           }}
         >
-          ● {MODE_LABEL[mode]}
+          <span className="mr-1 inline-block h-1.5 w-1.5 rounded-full bg-current" />
+          {MODE_LABEL[mode]}
         </span>
       </header>
 

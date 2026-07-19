@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import type { ProofRef } from "@/lib/types";
 import { explorerUrl, shortHash, shortSignature } from "@/lib/solana/proofs";
 import { VerifyOnChainButton } from "@/components/linesman/verify-onchain-button";
+import { IconArrowUpRight, IconChainLink, IconChevronRight } from "@/components/linesman/icons";
 
 export function VerifyStrip({
   proofRef,
@@ -25,10 +26,10 @@ export function VerifyStrip({
         className="flex min-h-11 w-full items-center justify-between rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] px-4 py-3 text-left transition-transform active:scale-[0.98]"
       >
         <span className="flex items-center gap-2 text-sm text-[color:var(--color-text)]">
-          <span aria-hidden="true">⛓</span>
+          <IconChainLink className="h-4 w-4 text-[color:var(--color-accent)]" />
           Anchored on Solana · slot {proofRef.slot?.toLocaleString()}
         </span>
-        <span className="text-[color:var(--color-muted)]">›</span>
+        <IconChevronRight className="h-4 w-4 text-[color:var(--color-muted)]" />
       </button>
 
       <AnimatePresence>
@@ -78,10 +79,10 @@ export function VerifyStrip({
                   href={explorerUrl(proofRef)}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-4 block text-center text-sm font-medium underline"
+                  className="mt-4 flex items-center justify-center gap-1 text-center text-sm font-medium underline"
                   style={{ color: "var(--color-accent)" }}
                 >
-                  View on Solana Explorer ↗
+                  View on Solana Explorer <IconArrowUpRight className="h-3.5 w-3.5" />
                 </a>
               )}
 

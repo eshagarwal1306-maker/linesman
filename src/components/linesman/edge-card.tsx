@@ -34,7 +34,7 @@ export function EdgeCard({ edge, isNew = false }: { edge: Edge; isNew?: boolean 
       initial={isNew ? { opacity: 0, y: -24 } : false}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: "spring", stiffness: 260, damping: 26 }}
-      className={`ln-edge-card relative overflow-hidden rounded-2xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] ${isNew ? "ln-pulse" : ""}`}
+      className={`ln-edge-card relative overflow-hidden rounded-[22px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] shadow-[0_18px_36px_-26px_rgba(0,0,0,0.65)] ${isNew ? "ln-pulse" : ""}`}
       style={{ borderLeft: `3px solid ${accentTeamColor(edge)}` }}
     >
       <Link href={`/market/${detailId}`} className="block p-4 active:scale-[0.98]" style={{ transition: "transform 120ms ease" }}>

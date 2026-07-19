@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { MOCK_RECORDINGS, REPLAY_SPEEDS, useReplayStore } from "@/lib/store/replay-store";
+import { IconPause, IconPlay } from "@/components/linesman/icons";
 
 const GOAL_MARKERS = [0.22, 0.47, 0.61, 0.88];
 
@@ -43,7 +44,7 @@ export default function ReplayPage() {
         </p>
       </div>
 
-      <label className="flex items-center justify-between rounded-2xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-4">
+      <label className="flex items-center justify-between rounded-[22px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-4">
         <div>
           <p className="text-sm font-semibold text-[color:var(--color-text)]">Replay mode</p>
           <p className="text-xs text-[color:var(--color-muted)]">Toggle the Replay broadcast bug app-wide</p>
@@ -92,15 +93,15 @@ export default function ReplayPage() {
         </div>
       </div>
 
-      <div className="flex flex-col items-center gap-4 rounded-2xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-5 lg:max-w-xl lg:mx-auto lg:w-full">
+      <div className="flex flex-col items-center gap-4 rounded-[22px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-5 lg:max-w-xl lg:mx-auto lg:w-full">
         <button
           type="button"
           onClick={togglePlaying}
           aria-label={isPlaying ? "Pause" : "Play"}
-          className="flex h-16 w-16 items-center justify-center rounded-full text-2xl text-[color:var(--color-bg)] transition-transform active:scale-90"
+          className="flex h-16 w-16 items-center justify-center rounded-full text-[color:var(--color-bg)] transition-transform active:scale-90"
           style={{ background: "var(--color-accent)" }}
         >
-          {isPlaying ? "❙❙" : "▶"}
+          {isPlaying ? <IconPause className="h-7 w-7" /> : <IconPlay className="h-7 w-7" />}
         </button>
 
         <div className="w-full">
